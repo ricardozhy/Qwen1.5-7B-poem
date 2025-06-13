@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qwen1.5-7B-poem: 古诗词领域基础模型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Antique Parchment -->
+    <!-- Application Structure Plan: A single-page application with a fixed header for navigation and four distinct, scrollable sections: 1. Overview: Presents the model's core value and key features using visually engaging cards. 2. Model Data: Details the training data with a focus on its scale and richness. 3. Quick Start: An interactive, task-oriented section with tabbed code snippets and a simulated "live" demo. 4. Application Blueprint: Inspires developers by showcasing potential use-cases in an interactive grid. This structure is designed to guide users from understanding the "what" and "why" to the "how" and "what's next," catering to different user intents (learning, coding, ideation) in a non-linear way. -->
+    <!-- Visualization & Content Choices: 
+        - Key Features: Report Info -> Four main features. Goal -> Inform/Engage. Viz/Method -> Icon + Text cards in a grid. Interaction -> Hover effects. Justification -> More scannable and visually appealing than a list. Library -> HTML/Tailwind.
+        - Code Snippets: Report Info -> Loading code for Hugging Face/ModelScope. Goal -> Usability/Copy-paste. Viz/Method -> Tabbed interface with copy buttons. Interaction -> Click tabs to switch, click icon to copy. Justification -> Organizes distinct code, improves developer experience. Library -> JS.
+        - Inference Demo: Report Info -> Python inference example. Goal -> Demonstrate capability. Viz/Method -> Input field, button, and output area. Interaction -> Click "Generate" button to populate a pre-defined result. Justification -> A simulated live demo is more impactful than static code. Library -> JS.
+        - Application Scenarios: Report Info -> List of potential applications. Goal -> Inspire/Explore. Viz/Method -> Grid of clickable cards. Interaction -> Hover to reveal more info. Justification -> Encourages exploration and is more dynamic than a static list. Library -> JS/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-color: #FDF6E3;
+            --text-color: #586E75;
+            --accent-color: #268BD2;
+            --card-bg: #EEE8D5;
+            --border-color: #D1C7B3;
+            --header-bg: rgba(253, 246, 227, 0.8);
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .glassmorphism-header {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: var(--header-bg);
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .active-tab {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .inactive-tab {
+            background-color: var(--card-bg);
+        }
+        .tooltip {
+            position: absolute;
+            display: none;
+            background-color: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .copy-button:hover .tooltip {
+            display: block;
+        }
+        .blueprint-card .description {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .blueprint-card:hover .description {
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header -->
+    <header id="header" class="glassmorphism-header sticky top-0 z-50 w-full border-b border-gray-200/50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold" style="color: var(--text-color);">Qwen1.5-7B-poem</a>
+                </div>
+                <nav class="hidden md:flex md:space-x-8">
+                    <a href="#overview" class="font-medium hover:text-blue-500 transition-colors">总览</a>
+                    <a href="#data" class="font-medium hover:text-blue-500 transition-colors">模型数据</a>
+                    <a href="#quickstart" class="font-medium hover:text-blue-500 transition-colors">快速上手</a>
+                    <a href="#blueprint" class="font-medium hover:text-blue-500 transition-colors">应用蓝图</a>
+                </nav>
+                 <div class="hidden md:block">
+                    <a href="https://github.com/ricardozhy/Qwen1.5-7B-poem" target="_blank" class="inline-block bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">
+                        ⭐ Star on GitHub
+                    </a>
+                </div>
+                <div class="md:hidden">
+                     <button id="mobile-menu-button" class="p-2 rounded-md">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                     </button>
+                </div>
+            </div>
+        </div>
+         <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#overview" class="block py-2 px-4 text-sm hover:bg-gray-200/50">总览</a>
+            <a href="#data" class="block py-2 px-4 text-sm hover:bg-gray-200/50">模型数据</a>
+            <a href="#quickstart" class="block py-2 px-4 text-sm hover:bg-gray-200/50">快速上手</a>
+            <a href="#blueprint" class="block py-2 px-4 text-sm hover:bg-gray-200/50">应用蓝图</a>
+             <a href="https://github.com/ricardozhy/Qwen1.5-7B-poem" target="_blank" class="block py-2 px-4 text-sm font-bold hover:bg-gray-200/50">
+                ⭐ Star on GitHub
+            </a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Section 1: Overview -->
+        <section id="overview" class="pt-16 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">古诗词领域基础模型</h1>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto" style="color: #6c7A89;">
+                    一个深度融合中国古诗词文化知识的语言模型底座，为生成、赏析、问答等下游任务提供强大起点。
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+                <!-- Feature Cards -->
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4" style="color: var(--accent-color);">📚</div>
+                    <h3 class="text-xl font-bold mb-2">深厚领域知识</h3>
+                    <p class="text-sm">学习超5.2亿字符专业语料，贯通诗词格律、背景、注释与翻译。</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4" style="color: var(--accent-color);">✍️</div>
+                    <h3 class="text-xl font-bold mb-2">卓越续写能力</h3>
+                    <p class="text-sm">作为基础模型，可自然承接上文，生成符合韵律与意境的优美文段。</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4" style="color: var(--accent-color);">🚀</div>
+                    <h3 class="text-xl font-bold mb-2">强大微调潜力</h3>
+                    <p class="text-sm">理想的微调基座，少量监督数据即可在特定任务上取得优异性能。</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <div class="text-4xl mb-4" style="color: var(--accent-color);">🌍</div>
+                    <h3 class="text-xl font-bold mb-2">开源开放</h3>
+                    <p class="text-sm">模型、代码与细节完全开放，鼓励社区探索、创新与共享。</p>
+                </div>
+            </div>
+
+            <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-lg max-w-4xl mx-auto text-center shadow-lg">
+                <h3 class="text-xl font-bold mb-2">⚠️ 重要提示：这是一个基础模型 (Base Model)</h3>
+                <p>本模型设计初衷是作为二次开发和微调的起点，它擅长文本补全，但无法直接像聊天机器人一样遵循复杂指令。请在指令微调后用于您的应用场景。</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Model Data -->
+        <section id="data" class="pt-16 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">源于经典，博采众长</h2>
+                <p class="mt-2 text-lg" style="color: #6c7A89;">模型的核心竞争力源自其高质量、大规模的训练数据。</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-12">
+                 <div class="text-center">
+                    <p class="text-6xl md:text-8xl font-extrabold" style="color: var(--accent-color);">5.2亿</p>
+                    <p class="text-xl font-semibold">字符专业语料</p>
+                    <p class="mt-2 text-sm text-gray-500">
+                        数据来源 
+                        <a href="https://github.com/VMIJUNV/chinese-poetry-and-prose" target="_blank" class="text-blue-500 hover:underline">
+                            chinese-poetry-and-prose
+                        </a>
+                    </p>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div class="space-y-4">
+                        <div class="card p-4 rounded-lg flex items-center"><span class="mr-4 text-2xl">📜</span><span><b>诗词原文:</b> 覆盖先秦至近代的经典诗、词、曲、赋。</span></div>
+                        <div class="card p-4 rounded-lg flex items-center"><span class="mr-4 text-2xl">👤</span><span><b>作者信息:</b> 关联每首作品的作者生平与所属朝代。</span></div>
+                        <div class="card p-4 rounded-lg flex items-center"><span class="mr-4 text-2xl">📖</span><span><b>现代文翻译:</b> 将古文翻译成通俗易懂的白话文。</span></div>
+                        <div class="card p-4 rounded-lg flex items-center"><span class="mr-4 text-2xl">📝</span><span><b>字词注释:</b> 对诗词中的难点、重点字词进行详细解释。</span></div>
+                        <div class="card p-4 rounded-lg flex items-center"><span class="mr-4 text-2xl">🎨</span><span><b>赏析背景:</b> 深入分析作品的艺术手法、思想内涵与创作背景。</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Quick Start -->
+        <section id="quickstart" class="pt-16 -mt-16 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">三步快速上手</h2>
+                <p class="mt-2 text-lg" style="color: #6c7A89;">只需几行代码，即可开始探索模型的强大能力。</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <!-- Step 1: Environment -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-2"><span class="inline-block bg-gray-700 text-white rounded-full h-8 w-8 text-center leading-8 mr-3">1</span>环境准备</h3>
+                    <div class="relative bg-gray-800 text-white p-4 rounded-lg font-mono text-sm">
+                        <button class="copy-button absolute top-2 right-2 p-2 rounded hover:bg-gray-600" data-clipboard-text="pip install transformers torch accelerate sentencepiece">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            <span class="tooltip">复制</span>
+                        </button>
+                        <pre><code>pip install transformers torch accelerate sentencepiece</code></pre>
+                    </div>
+                </div>
+
+                <!-- Step 2: Load Model -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold mb-2"><span class="inline-block bg-gray-700 text-white rounded-full h-8 w-8 text-center leading-8 mr-3">2</span>加载模型</h3>
+                    <div>
+                        <div class="flex border-b border-gray-300">
+                            <button id="hf-tab" class="tab-button py-2 px-4 font-semibold active-tab rounded-t-lg">🤗 Hugging Face</button>
+                            <button id="ms-tab" class="tab-button py-2 px-4 font-semibold inactive-tab rounded-t-lg">ModelScope</button>
+                        </div>
+                        <div id="hf-code" class="code-content relative bg-gray-800 text-white p-4 rounded-b-lg font-mono text-sm">
+                            <button class="copy-button absolute top-2 right-2 p-2 rounded hover:bg-gray-600" data-clipboard-target="#hf-code-block">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                <span class="tooltip">复制</span>
+                            </button>
+                            <pre><code id="hf-code-block">from transformers import AutoModelForCausalLM, AutoTokenizer
+
+model_id = "ricardozhy/Qwen1.5-7B-poem"
+tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype="auto",
+    device_map="auto",
+    trust_remote_code=True
+)</code></pre>
+                        </div>
+                        <div id="ms-code" class="code-content hidden relative bg-gray-800 text-white p-4 rounded-b-lg font-mono text-sm">
+                             <button class="copy-button absolute top-2 right-2 p-2 rounded hover:bg-gray-600" data-clipboard-target="#ms-code-block">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                <span class="tooltip">复制</span>
+                            </button>
+                            <pre><code id="ms-code-block">from modelscope import AutoModelForCausalLM, AutoTokenizer
+
+model_id = "njauzwh/Qwen1.5-7B-poem"
+tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    torch_dtype="auto",
+    device_map="auto",
+    trust_remote_code=True
+)</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Inference Demo -->
+                <div>
+                     <h3 class="text-xl font-bold mb-2"><span class="inline-block bg-gray-700 text-white rounded-full h-8 w-8 text-center leading-8 mr-3">3</span>推理演示</h3>
+                     <div class="card p-6 rounded-lg">
+                        <div class="mb-4">
+                            <label for="prompt-input" class="block font-semibold mb-1">输入提示 (Prompt):</label>
+                            <input id="prompt-input" type="text" value="明月几时有" class="w-full p-2 border rounded-md" style="background-color: var(--bg-color); border-color: var(--border-color);">
+                        </div>
+                        <button id="generate-button" class="w-full py-2 px-4 rounded-md font-semibold text-white transition-colors" style="background-color: var(--accent-color); opacity: 1; hover:opacity: 0.9;">
+                            生成续写
+                        </button>
+                        <div id="output-area" class="mt-4 p-4 border-dashed border-2 rounded-md min-h-[100px] whitespace-pre-wrap" style="border-color: var(--border-color);">
+                            <span class="text-gray-400">点击按钮查看生成结果...</span>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 4: Application Blueprint -->
+        <section id="blueprint" class="pt-16 -mt-16">
+             <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold">开启无限可能：应用蓝图</h2>
+                <p class="mt-2 text-lg" style="color: #6c7A89;">在本项目基础上进行指令微调，您可以构建丰富多彩的古诗词应用。</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">古诗词生成</h3>
+                    <div class="description">
+                        <p class="text-sm">根据主题、意象、体裁（五言、七言、词牌）等指令创作诗词。</p>
+                    </div>
+                </div>
+                <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">智能问答</h3>
+                    <div class="description">
+                        <p class="text-sm">建立一个能够回答关于诗人、作品背景、诗句含义等问题的智能系统。</p>
+                    </div>
+                </div>
+                 <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">自动赏析</h3>
+                     <div class="description">
+                        <p class="text-sm">输入一首诗，模型可以自动生成包含艺术手法、思想内涵的赏析文段。</p>
+                    </div>
+                </div>
+                 <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">古文翻译</h3>
+                     <div class="description">
+                        <p class="text-sm">提升古诗词到现代白话文的翻译质量，使其更流畅、更信达雅。</p>
+                    </div>
+                </div>
+                <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">教育辅助</h3>
+                     <div class="description">
+                        <p class="text-sm">开发辅助学生学习和理解古诗词的工具，如格律检查、意象分析等。</p>
+                    </div>
+                </div>
+                 <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
+                    <h3 class="text-xl font-bold mb-2">数字人文研究</h3>
+                     <div class="description">
+                        <p class="text-sm">作为强大的NLP工具，辅助进行文学计量学、作者风格归属等前沿研究。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t mt-16" style="border-color: var(--border-color);">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-500">
+            <div class="flex justify-center space-x-6 mb-4">
+                 <a href="https://huggingface.co/ricardozhy/Qwen1.5-7B-poem" target="_blank" class="hover:text-blue-500 transition-colors">Hugging Face</a>
+                 <a href="https://www.modelscope.cn/models/njauzwh/Qwen1.5-7B-poem" target="_blank" class="hover:text-blue-500 transition-colors">ModelScope</a>
+                 <a href="https://github.com/ricardozhy/Qwen1.5-7B-poem" target="_blank" class="hover:text-blue-500 transition-colors">GitHub</a>
+            </div>
+            <p class="text-sm mb-2">本项目采用 Apache License 2.0 许可证。</p>
+            <p class="text-sm">Copyright © 2024. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Code Tabs
+            const hfTab = document.getElementById('hf-tab');
+            const msTab = document.getElementById('ms-tab');
+            const hfCode = document.getElementById('hf-code');
+            const msCode = document.getElementById('ms-code');
+
+            hfTab.addEventListener('click', () => {
+                hfTab.classList.add('active-tab');
+                hfTab.classList.remove('inactive-tab');
+                msTab.classList.add('inactive-tab');
+                msTab.classList.remove('active-tab');
+                hfCode.classList.remove('hidden');
+                msCode.classList.add('hidden');
+            });
+
+            msTab.addEventListener('click', () => {
+                msTab.classList.add('active-tab');
+                msTab.classList.remove('inactive-tab');
+                hfTab.classList.add('inactive-tab');
+                hfTab.classList.remove('active-tab');
+                msCode.classList.remove('hidden');
+                hfCode.classList.add('hidden');
+            });
+
+            // Clipboard
+            document.querySelectorAll('.copy-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const tooltip = button.querySelector('.tooltip');
+                    let textToCopy = '';
+                    if (button.dataset.clipboardText) {
+                        textToCopy = button.dataset.clipboardText;
+                    } else if (button.dataset.clipboardTarget) {
+                        textToCopy = document.querySelector(button.dataset.clipboardTarget).innerText;
+                    }
+
+                    try {
+                        const tempInput = document.createElement('textarea');
+                        tempInput.value = textToCopy;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+                        
+                        tooltip.textContent = '已复制!';
+                        setTimeout(() => {
+                           tooltip.textContent = '复制';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
+                        tooltip.textContent = '复制失败';
+                         setTimeout(() => {
+                           tooltip.textContent = '复制';
+                        }, 2000);
+                    }
+                });
+            });
+
+            // Inference Demo
+            const generateButton = document.getElementById('generate-button');
+            const outputArea = document.getElementById('output-area');
+            const promptInput = document.getElementById('prompt-input');
+
+            generateButton.addEventListener('click', () => {
+                const promptText = promptInput.value;
+                if (!promptText) {
+                    outputArea.innerHTML = '<span class="text-red-500">请输入提示!</span>';
+                    return;
+                }
+                
+                outputArea.innerHTML = '<span class="text-gray-400">生成中...</span>';
+                
+                setTimeout(() => {
+                     let response = '把酒问青天。\n不知天上宫阙，今夕是何年。\n我欲乘风归去，又恐琼楼玉宇，高处不胜寒。\n起舞弄清影，何似在人间。';
+                     if(promptText !== '明月几时有'){
+                        response = `（模拟续写）\n${promptText}，此事古难全。但愿人长久，千里共婵娟。`
+                     }
+                     outputArea.textContent = response;
+                }, 1000);
+            });
+            
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+
+                    if(targetElement) {
+                        // Close mobile menu if open
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
