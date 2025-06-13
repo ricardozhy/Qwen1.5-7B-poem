@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qwen1.5-7B-poem: 古诗词领域基础模型</title>
+    <title>Qwen1.5-7B-poem: 古诗词领域基座模型</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chosen Palette: Antique Parchment -->
     <!-- Application Structure Plan: A single-page application with a fixed header for navigation and four distinct, scrollable sections: 1. Overview: Presents the model's core value and key features using visually engaging cards. 2. Model Data: Details the training data with a focus on its scale and richness. 3. Quick Start: An interactive, task-oriented section with tabbed code snippets and a simulated "live" demo. 4. Application Blueprint: Inspires developers by showcasing potential use-cases in an interactive grid. This structure is designed to guide users from understanding the "what" and "why" to the "how" and "what's next," catering to different user intents (learning, coding, ideation) in a non-linear way. -->
@@ -118,7 +118,7 @@
         <!-- Section 1: Overview -->
         <section id="overview" class="pt-16 -mt-16 mb-24">
             <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">古诗词领域基础模型</h1>
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">古诗词领域基座模型</h1>
                 <p class="text-lg md:text-xl max-w-3xl mx-auto" style="color: #6c7A89;">
                     一个深度融合中国古诗词文化知识的语言模型底座，为生成、赏析、问答等下游任务提供强大起点。
                 </p>
@@ -134,7 +134,7 @@
                 <div class="card p-6 rounded-lg text-center">
                     <div class="text-4xl mb-4" style="color: var(--accent-color);">✍️</div>
                     <h3 class="text-xl font-bold mb-2">卓越续写能力</h3>
-                    <p class="text-sm">作为基础模型，可自然承接上文，生成符合韵律与意境的优美文段。</p>
+                    <p class="text-sm">作为基座模型，可自然承接上文，生成符合韵律与意境的优美文段。</p>
                 </div>
                 <div class="card p-6 rounded-lg text-center">
                     <div class="text-4xl mb-4" style="color: var(--accent-color);">🚀</div>
@@ -149,8 +149,8 @@
             </div>
 
             <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-6 rounded-lg max-w-4xl mx-auto text-center shadow-lg">
-                <h3 class="text-xl font-bold mb-2">⚠️ 重要提示：这是一个基础模型 (Base Model)</h3>
-                <p>本模型设计初衷是作为二次开发和微调的起点，它擅长文本补全，但无法直接像聊天机器人一样遵循复杂指令。请在指令微调后用于您的应用场景。</p>
+                <h3 class="text-xl font-bold mb-2">⚠️ 重要提示：这是一个基座模型 (Base Model)</h3>
+                <p>本模型设计初衷是作为二次开发和微调的起点，无法直接像聊天机器人一样遵循复杂指令。请在指令微调后用于您的应用场景。</p>
             </div>
         </section>
 
@@ -269,7 +269,7 @@ model = AutoModelForCausalLM.from_pretrained(
         <section id="blueprint" class="pt-16 -mt-16">
              <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold">开启无限可能：应用蓝图</h2>
-                <p class="mt-2 text-lg" style="color: #6c7A89;">在本项目基础上进行指令微调，您可以构建丰富多彩的古诗词应用。</p>
+                <p class="mt-2 text-lg" style="color: #6c7A89;">在本项目基座上进行指令微调，您可以构建丰富多彩的古诗词应用。</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="card blueprint-card rounded-lg p-6 cursor-pointer">
