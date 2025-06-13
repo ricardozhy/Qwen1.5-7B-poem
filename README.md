@@ -1,4 +1,3 @@
-```markdown
 # Qwen1.5-7B-poem: 古诗词领域基座模型
 
 ## 简介
