@@ -78,4 +78,3 @@ model = AutoModelForCausalLM.from_pretrained(
   
 ## 致谢
 特别感谢 [VMIJUNV/chinese-poetry-and-prose](https://github.com/VMIJUNV/chinese-poetry-and-prose) 项目及其贡献者们整理并提供的宝贵数据集，为本项目提供了坚实的数据基座。
-```
