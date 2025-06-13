@@ -4,7 +4,7 @@
 
 [![ModelScope](https://img.shields.io/badge/ModelScope-07ced1?style=flat&logo=modelscope&logoColor=white)](https://modelscope.cn/models/njauzwh/Qwen1.5-7B-poem/summary)
 [![GitHub Stars](https://img.shields.io/github/stars/ricardozhy/QPM-1K-32B-R1?style=social)](https://github.com/ricardozhy/Qwen1.5-7B-poem)
-[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-QPM--1K--32B--R1-yellow)](https://huggingface.co/ricardozhy/Qwen1.5-7B-poem)
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Qwen1.5-7B-poem-yellow)](https://huggingface.co/ricardozhy/Qwen1.5-7B-poem)
 ![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen)
 
 </div>
