@@ -1,5 +1,13 @@
 # Qwen1.5-7B-poem: 古诗词领域基座模型
 
+<div align="center">
+
+[![ModelScope](https://img.shields.io/badge/ModelScope-07ced1?style=flat&logo=modelscope&logoColor=white)](https://modelscope.cn/models/njauzwh/Qwen1.5-7B-poem/summary)
+[![GitHub Stars](https://img.shields.io/github/stars/ricardozhy/QPM-1K-32B-R1?style=social)](https://github.com/ricardozhy/Qwen1.5-7B-poem)
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-QPM--1K--32B--R1-yellow)](https://huggingface.co/ricardozhy/Qwen1.5-7B-poem)
+![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen)
+
+</div>
 ## 简介
 Qwen1.5-7B-poem 是一个基于 Qwen1.5-7B 模型，在海量高质量中国古诗词数据上进行继续预训练（Pre-training）而成的领域基座模型。
 
